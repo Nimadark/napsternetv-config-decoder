@@ -55,3 +55,23 @@ $importer = new ConfigImporter($wbaes);
 $ConfigFile = file_get_contents('test.npvt'); //input .npvt
 $result = $importer->importConfig($ConfigFile);
 print_R($result);
+```
+
+
+
+
+## Support & Contribution / حمایت از پروژه
+
+If this project helped you decrypt configurations or automate your API workflow, consider supporting my work! Your support helps me spend more time reverse engineering and developing open-source security tools.
+
+### 📢 Stay Connected
+* **Developer Telegram:** [@nimadark045](https://t.me/nimadark045)
+* **Academy Channel:** [APKReverseAcademy](https://t.me/APKReverseAcademy) — Join for more reverse engineering, Android security research, and protocol analysis tutorials.
+
+### 🪙 Donate (Crypto)
+If you'd like to buy me a coffee or support the academy, you can send TRON (TRX) or USDT-TRC20 to the following address:
+
+* **Network:** TRON (TRC-20)
+* **Address:** `TDS3fbYgzWPkydsb3QM5jctN8nfnVSVxsX`
+
+Thank you for your support! 🚀
