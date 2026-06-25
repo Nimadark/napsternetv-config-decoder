@@ -1,5 +1,3 @@
-# napsternetv-config-decoder
-A high-performance monolithic PHP engine to parse, validate, and decrypt NPVT1 encrypted configurations using White-Box AES CTR mode.
 # WBAES NPV Config Importer (PHP)
 
 [English](#english) | [فارسی](#فارسی)
@@ -27,16 +25,16 @@ A highly optimized PHP implementation designed to parse, decrypt, and import cus
 
 1. **Optimize Massive Tables (Recommended):**
    Parsing massive lookup arrays dynamically causes intense CPU overhead. Render them natively once:
-   ```bash
+```bash
    php convert.php
 Run Execution Pipeline:
 Provide the decrypted structure or trigger incoming app configs over index.php:
 
 PHP
-$rawConfig = "NPVT1\nCwoL5kFsDa...[Your Encrypted Payload]";
-$result = $importer->importConfig($rawConfig);
-
-print_r($result);
+   $rawConfig = "NPVT1\nCwoL5kFsDa...[Your Encrypted Payload]";
+   $result = $importer->importConfig($rawConfig);
+   
+   print_r($result);
 فارسی
 یک پیاده‌سازی همه‌جانبه و بسیار بهینه در PHP برای پارس، لایه‌برداری و رمزگشایی پروفایل‌های متقاطع کانفیگ کلاینت (مانند ساختارهای .npvt). این پکیج فرآیند رمزنگاری بلوکی White-Box AES در حالت CTR را شبیه‌سازی می‌کند.
 
@@ -52,19 +50,21 @@ print_r($result);
 ساختار فایل‌های پروژه
 ├── perfect_dumped_tables.json   # فایل خام جداول دامپ شده حافظه توسط فرایدا
 ├── convert.php                  # اسکریپت مبدل و کش‌کننده آرایه‌های جیسون
-├── index.php                    # فایل اصلی شامل موتور کریپتو، کانتینرها و پکت تست واقعی
+├── index.php                    # فایل اصلی شامل موتور کریپتو, کانتینرها و پکت تست واقعی
 └── .gitignore                   # جلوگیری از آپلود جداول تست شخصی
 نحوه راه‌اندازی
 ۱. بهینه‌سازی ساختار جداول (فقط یک‌بار):
 پارس کردن مداوم لوکاپ‌تیبل‌های سنگین باعث کندی پردازش می‌شود. دستور زیر را در ترمینال بزنید تا نسخه کش کامپایل شود:
 
 Bash
-php convert.php
+   php convert.php
 ۲. اجرای رمزگشایی کانفیگ:
 پکت دریافتی از کلاینت را به متد importConfig پاس دهید تا دیتای سرورها به صورت فرمت JSON استاندارد به شما تحویل داده شود:
 
 PHP
-$rawConfig = "NPVT1\nCwoL5kFsDa...[رشته رمزشده اختصاصی]";
-$result = $importer->importConfig($rawConfig);
-
-print_r($result);
+   $rawConfig = "NPVT1\nCwoL5kFsDa...[رشته رمزشده اختصاصی]";
+   $result = $importer->importConfig($rawConfig);
+   
+   print_r($result);
+License / لایسنس
+This project is open-sourced software licensed under the MIT License.
