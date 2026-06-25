@@ -40,13 +40,7 @@ This engine is designed for automation systems, API management panels, and user 
 
 ## How to Use
 
-### 1. Prepare Your Lookup Tables
-Ensure your multi-dimensional mathematical lookup tables extracted via Frida are saved as `perfect_dumped_tables.json` in the root directory of your project.
-
-### 2. Optimize Your Tables for Production (Recommended)
-Because full White-Box AES lookup tables are extremely massive, parsing the raw JSON file on every incoming API request causes intensive CPU and memory overhead. It is highly recommended to run the optimization script once to generate a native, memory-cached PHP static array:
-
-Create a file named `convert.php` and execute it once:
+### Create a file named `convert.php` and execute it once:
 ```php
 <?php
 // convert.php
