@@ -28,3 +28,50 @@ When NapsternetV exports a configuration string, it prefixes it with a structura
 
 Primary Use Case
 This engine is designed for automation systems, API management panels, and user control dashboards that need to dynamically decode, authenticate, or manage shared access links generated from NapsternetV profiles without relying on client-side environments or running an emulator.
+
+
+
+
+
+
+
+How to Use
+
+1. Prepare Your Lookup Tables:
+   Ensure your multi-dimensional mathematical lookup tables extracted via Frida are saved as 'perfect_dumped_tables.json' in the root directory of your project.
+
+2. (Recommended) Optimize Your Tables for Production:
+   Because full White-Box AES lookup tables are extremely massive, parsing the raw JSON file on every incoming API request causes intensive CPU and memory overhead. It is highly recommended to run the optimization script once to generate a native, memory-cached PHP static array:
+
+   // Save this as convert.php and execute it once:
+   $data = json_decode(file_get_contents('perfect_dumped_tables.json'), true);
+   file_put_contents('tables_optimized.php', "<?php\nreturn " . var_export($data, true) . ";\n");
+
+3. Executing the Decoder Pipeline:
+   Once your tables are optimized, you can feed any raw configuration string (copied directly from the NapsternetV app) straight into the importConfig method. The engine automatically takes care of header validation, whitespace sanitization, and block-by-block decryption:
+
+   require_once 'index.php'; // Or the file containing your monolithic implementation
+
+   // Load the optimized data structure
+   $tablesData = include 'tables_optimized.php';
+   $wbTables = new WhiteboxTables(
+       $tablesData['nr'], $tablesData['xor'], $tablesData['tyboxes'], $tablesData['tboxesLast'], $tablesData['mbl']
+   );
+
+   // Spin up the core crypto engine
+   $wbaes = new WBAESCTR($wbTables);
+   $importer = new ConfigImporter($wbaes);
+
+   // Paste your raw encoded string (supports spaces, tabs, and newlines)
+   $rawConfigFromApp = "NPVT1\nCwoL5kFsDa8hKLtEnx/x140=,4ia4N4aYG2mO/7B/7NGGCW8m6hhxrjxDw1QfmgQ00ik8fYgiV7VrEJgPQ4UXGvsZEDi7BTL5e7rMR+WYBGmxTJxp5kch9WMOwU6Zixml6wQ3OOpMMpVri7gvo4UXpK0PFySYBH+lML6cVAjSF/rwEyw0ryB1sSp3lhh6kwGYvR4tM64fd5cgkpxU2JwZEewILi6rBHmzLSuWGILNF9u9X79/qRJ0pj2jkBsUiw8hqEXuZPBHKfpsXMFGHYtHn/IcqDa7VCrhYAvIW0j9e+HfKRQr+gRxuntH2wV320N27V/0f/lDIe1o1sxYg58BHq5MAX/kVGOmK/qcBNXGRyW9R3pl8E4g4XXviRc52kKS7RksZ+pOdKBuvctEuYQHi6lK7mmtE3HuOMbBFCGbUy77HIY+q0YnpmqO1VTOzEH18BmtZ+oYf608otVUUsxBefAPSn/yVHexKUTbWknEWon6Xyp/rwN+4XX8gR653UWM8BlAf/JUd7Y3gtVUWcdGLPwIyjjqTGSxLD/VVL6bR/bmN5YyplQq4XsK2wbA20aT7An8LqcYMvktyYwTnIUXaPAeiR6nGHaqPkjDDZTfUBLsFMcz6kwh73u1ijpayl6N+1/IKboDde97MpgFYt5atPtf6H/qWjKsN1qAO7LLXKf6M/0pvxliqHsjnxci2lD1vR81MqsdQqw2LZwSbMdRYP4Uwj+6GXumNzvDAqbcUAq9EocxsTl2pTC0kBdD+kEy7RjXf/IQca8qL9VU8dFF0u0Edzy8EzL5e/fVVA3MQ/f8GEA5u1Qq4Xvy2xsk2kZ6+BidZ+qGj1nZB1GubHGaFkfaH+/orrcb6v1TrjBxhNU1XfP1EMfJS3mKU6+2c5pQLqUQhE1WyGSAcSDw4gXtd79MQW/orr8a2x51rzdwsmBG+MTbENzIe4F12a5ocLCdF6S9fRDcyGR5KVuv6nGa1xOls30Q3stPgW0h2dfHaRu/XZR96FYw43kL2VbmiRUdv13WfehWMOMtvJQTS/1y6K0PeiTqWjKgLIGNGd/6UOrpGEMQrQVjoj6T20wli0gwswbrM6kbdeFjBsBFy4R4tNFdSAmPACKxOHbbWgzIUfftGLku6kwy8mzj10ddnBuNqUk2bPpAKvthTclUtotBh+8YqGfqICKRGJ/bWoXfB4z+BOMvpxB5rzydww3Syloa+RS3C60EY6o2yttMn4UX8fATwDSvImmzPDHDQzGLRsr9DgYvoQZkqjbssBKFkxdts1/YOawTdJcwTpxUA5gC9K5EVmzxTyX1YULVVNbMWMPtFo1/8lQp8GuVtCIUiXXX2AvIL6kPMu97hpwE88xHkqVfkWj5WCHybMHIQFCHBDGpXwB/uxNitTw3qRla3RcmvUW7ZfhUPOEpoooFk8ZHar1HmWWsFSf0a7aaWzOeA5yySZ44VVtx8WE71ERSkVGw/h5kbf8TI+F1LZQTAcFamL1HtTOnGHXhdQeXEyzeWqD0X89/rwRgoHsd2xt6zVBfpV/mKKZUPOEh040CsuRaUPpfR3+vA37hdSCQGOjMVn/tGHZnvARlpnX6j0QFyEwd7BKof/JUMu97GZwEFMBG0tUOkDPqTGSxLAWEWn3FWrL0PhUzrh934WMZ2wDc20bY8BP8Z/laMqoqPJYVDMxRFqUJByitWjKzODSKAbTbUXmlX71x6hl+ryDnlhQ0xVAo+gntMrodMvk/Z5UF2oUXcvMSbDaaGX+3PNq4GDvjVA3zH7YyoxN+4WMiiwMMhRds8RH5Eq4QeaAwepUl/MZH7exfLDupGmOmdRCcDifARzrbHOY46kwy4XXTnRPIwFY41hklf/JUMu97aZwFs8hSz71HM61X7JAbì‹œí—˜ Ú©Ù†ÛŒØ¯...";
+
+   // Execute and extract arrays
+   $result = $importer->importConfig($rawConfigFromApp);
+   print_r($result);
+
+4. Response Structure:
+   A successful execution yields a structured json array containing:
+   * status: Reflects whether the translation was successful ('success' or 'failed').
+   * version: The configuration's build metadata version.
+   * servers: Natively mapped proxy nodes (IPs, UUIDs, security salts).
+   * setting: Routing, core core policies, and client specifications.
