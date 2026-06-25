@@ -29,7 +29,7 @@ The algorithm processes the encrypted binary streams through layered table struc
 ### 4. Payload Extraction
 Once the cryptographic barrier is removed, the engine automatically decrypts the structure into human-readable text. It verifies internal configuration version constraints and parses the remaining structural segments into clean, natively accessible PHP associative arrays:
 * **`servers`**: The plaintext list containing decrypted proxy types, backend server IPs, connection ports, encryption parameters, and security tokens.
-* **`setting`**: The primary operational flags, core core-routing matrices, and client-side system profiles.
+* **`setting`**: The primary operational flags, core routing matrices, and client-side system profiles.
 
 ---
 
